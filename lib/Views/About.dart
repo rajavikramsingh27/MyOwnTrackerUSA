@@ -16,7 +16,7 @@ import '../Utils/Global.dart';
 class About extends StatelessWidget {
   About({Key? key}) : super(key: key);
   final controller = Get.put(AboutController());
-
+  
   launchURL() async {
     final mailID = 'myowntrackerusa@gmail.com';
     final subject = 'Call IT Support';
@@ -66,18 +66,16 @@ class About extends StatelessWidget {
                           height: 30,
                         ),
                         Text(
-                            // 'www.abcd.com',
                             controller.moreItem[index],
                             style: TextStylesProductSans.textStyles_16.apply(
-                                color: ColorStyle.black, fontWeightDelta: 0)),
+                                color: ColorStyle.black, fontWeightDelta: 0)
+                        ),
                         SizedBox(
                           height: 12,
                         ),
                         Container(
                           height: 1,
-                          // width: MediaQuery.of(context).size.width-90,
                           alignment: Alignment.center,
-
                           decoration: BoxDecoration(
                               color: ColorStyle.grey,
                               borderRadius: BorderRadius.circular(8)),
