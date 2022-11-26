@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextStylesProductSans {
-  static String kFontFamily = "Kastelov";
+  static String kFontFamily = "times new roman";
 
   static TextStyle get textStyles_6 => TextStyle(
     fontSize: 6,

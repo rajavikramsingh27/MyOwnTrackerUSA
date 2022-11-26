@@ -1,65 +1,105 @@
-import 'package:business_trackers/Components/InvoicesPaidCustom.dart';
+
+
+import 'package:business_trackers/Views/EstimateDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../Components/ElevatedButtonCustom.dart';
-import '../Controllers/InvoicesActiveController.dart';
+import '../Controllers/InvoicesController.dart';
 import '../Styles/ColorStyle.dart';
 import '../Styles/TextStyles.dart';
+import '../Models/ModelEstimate.dart';
+
+
 
 class InvoicesPaid extends StatelessWidget {
-  InvoicesPaid({Key? key}) : super(key: key);
+  List<ModelEstimate> arrModelEstimate;
+  InvoicesPaid({Key? key, required this.arrModelEstimate}) : super(key: key);
 
-  final controller = Get.put(InvoicesActiveController());
+  final controllerInvoices = Get.put(InvoicesController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: ColorStyle.primaryColor,
-        body: SingleChildScrollView(
-          padding: EdgeInsets.only(left: 20,right: 20,top: 30,bottom: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              SizedBox(
-                height: 15,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                      'June 2022',
-                      style:  TextStylesProductSans.textStyles_16
-                          .apply(color: ColorStyle.black, fontWeightDelta: 4)),
-                  Text(
-                      '\$200.00',
-                      style:  TextStylesProductSans.textStyles_16
-                          .apply(color: ColorStyle.black, fontWeightDelta: 4)),
-                ],),
-              SizedBox(
-                height: 10,),
-              Container(
-                  height: 1,
-                  color: ColorStyle.grey
-              ),
-              SizedBox(
-                height: 15,),
-
-              InvoicesPaidCustom(),
-              Container(
-                alignment: Alignment.centerRight,
-                child: ElevatedButtonCustom(
-                  text: "+  Create",
-                  colorBG:ColorStyle.secondryColor,
-                  colorText: ColorStyle.primaryColor,
-                  width: 116,
-                  onTap: () {
-                    // Get.to(.NewEstimate());
-                  },
+        body: ListView.builder(
+            itemCount: arrModelEstimate.length,
+            shrinkWrap: true,
+            padding: EdgeInsets.only(bottom: 80),
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                child: Container(
+                    padding: EdgeInsets.only(
+                        left:16,
+                        right: 16,
+                        top: 16,
+                        bottom: 16
+                    ),
+                    margin: EdgeInsets.only(top: 10),
+                    decoration: BoxDecoration(
+                        color: ColorStyle.blue,
+                        borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                arrModelEstimate[index].client!.name.toString(),
+                                style:  TextStylesProductSans.textStyles_16
+                                    .apply(color: ColorStyle.black,)),
+                            Text(
+                                '\$ '+arrModelEstimate[index].amountTotal!.toString(),
+                                style:  TextStylesProductSans.textStyles_16
+                                    .apply(color: ColorStyle.black,)),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                arrModelEstimate[index].date!.toString(),
+                                style:  TextStylesProductSans.textStyles_16
+                                    .apply(color: ColorStyle.black,)),
+                            Row(
+                              children: [
+                                // InkWell(child:Image.asset(ImageStyle.Path475,height: 20,),onTap: (){},),
+                                // SizedBox(
+                                //   width: 15,),
+                                InkWell(
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 6,right: 6,top: 5,bottom: 5),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                        arrModelEstimate[index].states_name!.toString(),
+                                        style:  TextStylesProductSans.textStyles_10
+                                            .apply(color:
+                                        ColorStyle.white
+                                        )
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: ColorStyle.hex('#61C842'),
+                                        borderRadius: BorderRadius.circular(6)
+                                    ),
+                                  ),
+                                  onTap: (){},)
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
                 ),
-              )
-            ],
-          ),
-        )
+                onTap: () {
+                  Get.to(EstimateDetails(title: 'Invoice',modelEstimate: arrModelEstimate[index]))!
+                      .then((value) {
+                    controllerInvoices.readInvoice();
+                  });
+                },
+              );
+            })
     );
   }
 }

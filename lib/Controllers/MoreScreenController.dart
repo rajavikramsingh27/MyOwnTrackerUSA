@@ -1,25 +1,28 @@
 
 import 'package:business_trackers/Styles/ImageStyle.dart';
 import 'package:get/get.dart';
+import '../Controllers/MyAccountController.dart';
+
+
 
 class MoreScreenController extends GetxController {
-  RxInt intAppBar = 0.obs;
+  final controllerMyAccount  = Get.put(MyAccountController());
+
   RxList<String> images1 = <String>[
     ImageStyle.Group3134,
     ImageStyle.Group3140,
     ImageStyle.Group3135,
     ImageStyle.Group3136,
     ImageStyle.Group3137,
-    ImageStyle.Group3138,
     ImageStyle.Group3139,
   ].obs;
+
   RxList<String> moreItem = [
     'My Company',
     'Taxes',
     'Items',
     'Document Settings',
     'Email Messages',
-    'Help',
     'About',
   ].obs;
 
@@ -29,11 +32,18 @@ class MoreScreenController extends GetxController {
     'Add or manage items',
     'Contract and Payment settings',
     'Edit your email message',
-    'Chat with us',
     'About company and terms',
   ].obs;
+
   reset() {
-    intAppBar.value = 0;
+    Future.delayed(Duration(microseconds: 100), () {
+      controllerMyAccount.refresh();
+      readProfile();
+    });
+  }
+
+  readProfile() {
+    controllerMyAccount.readProfile();
   }
 
 }

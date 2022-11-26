@@ -1,149 +1,105 @@
-import 'package:business_trackers/Views/InvoicesActived.dart';
-import 'package:business_trackers/Views/InvoicesPaid.dart';
-import 'package:flutter/material.dart';
-import 'package:business_trackers/Components/ElevatedButtonCustom.dart';
-import 'package:business_trackers/Styles/ColorStyle.dart';
-import 'package:business_trackers/Styles/TextStyles.dart';
-import 'package:get/get.dart';
 
-import '../Components/InvoicesActiveCustom.dart';
-import '../Controllers/InvoicesActiveController.dart';
+
+import '../Controllers/InvoicesController.dart';
+import '../Styles/ColorStyle.dart';
+import '../Styles/TextStyles.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'EstimateCreate.dart';
+import '../Models/ModelEstimate.dart';
+import 'EstimateDetails.dart';
 
 
 class InvoicesActive extends StatelessWidget {
-  InvoicesActive({Key? key}) : super(key: key);
+  List<ModelEstimate> arrModelEstimate;
+  InvoicesActive({Key? key, required this.arrModelEstimate}) : super(key: key);
 
-
-  final controller = Get.put(InvoicesActiveController());
-
+  final controllerInvoices = Get.put(InvoicesController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: ColorStyle.primaryColor,
-        body: GetBuilder(
-
-          init: InvoicesActiveController(),
-          initState: (state) {
-            controller.reset();
-
-            print(controller.intAppBar.value);
-          },
-          builder: (authController) {
-            return Obx(() =>  SingleChildScrollView(
-              padding: EdgeInsets.only(left: 20,right: 20,top: 30,bottom: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                          'Invoices',
-                          style:  TextStylesProductSans.textStyles_30
-                              .apply(color: ColorStyle.black, fontWeightDelta: 5)),
-                      InkWell(child:  Container(
-                        alignment: Alignment.center,
-                        height: 38,
-                        width: 38,
-                        child:  Icon(Icons.search,color: ColorStyle.secondryColor,),
-                        decoration: BoxDecoration(
-                            color: ColorStyle.secondryColor.withOpacity(.1),
-                            borderRadius: BorderRadius.circular(20)
+        body: Obx(()=>ListView.builder(
+            itemCount: arrModelEstimate.length,
+            shrinkWrap: true,
+            padding: EdgeInsets.only(bottom: 80),
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                child: Container(
+                    padding: EdgeInsets.only(
+                      left:16,
+                      right: 16,
+                      top: 16,
+                      bottom: 16,
+                    ),
+                    margin: EdgeInsets.only(top: 10),
+                    decoration: BoxDecoration(
+                        color: ColorStyle.blue,
+                        borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                arrModelEstimate[index].client!.name.toString(),
+                                style:  TextStylesProductSans.textStyles_16
+                                    .apply(color: ColorStyle.black,)),
+                            Text(
+                                '\$ '+arrModelEstimate[index].amountTotal!.toString(),
+                                style:  TextStylesProductSans.textStyles_16
+                                    .apply(color: ColorStyle.black,)),
+                          ],
                         ),
-                      ),
-                        onTap: (){},
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 25,),
-                  Container(
-                    height: 35,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: controller.invoice.length,
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Row(
-                            children: [
-                              InkWell(child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      controller.invoice[index],
-                                      style:  TextStylesProductSans.textStyles_16
-                                          .apply(color: (controller.intAppBar.value == index)
-                                          ? ColorStyle.secondryColor
-                                          : ColorStyle.grey,fontWeightDelta: 2 )
-                                  ),
-                                  Container(
+                        SizedBox(
+                          height: 10,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                arrModelEstimate[index].date!.toString(),
+                                style:  TextStylesProductSans.textStyles_16
+                                    .apply(color: ColorStyle.black,)),
+
+                            Row(
+                              children: [
+                                // InkWell(child:Image.asset(ImageStyle.Path475,height: 20,),onTap: (){},),
+                                // SizedBox(
+                                //   width: 15,),
+                                InkWell(
+                                  child: Container(
+                                    padding: EdgeInsets.only(left: 6,right: 6,top: 5,bottom: 5),
                                     alignment: Alignment.center,
-                                    height: 2,
-                                    width: 20,
+                                    child: Text(
+                                        arrModelEstimate[index].states_name!.toString(),
+                                        style:  TextStylesProductSans.textStyles_10
+                                            .apply(color: ColorStyle.white)
+                                    ),
                                     decoration: BoxDecoration(
-                                        color: (controller.intAppBar.value == index)
-                                            ? ColorStyle.secondryColor
-                                            : Colors.transparent,
-                                        borderRadius: BorderRadius.circular(2)
+                                        color: ColorStyle.grays,
+                                        borderRadius: BorderRadius.circular(6)
                                     ),
                                   ),
-                                ],
-                              ),onTap: (){  controller.intAppBar.value = index;},),
-                              SizedBox(width: 25,),
+                                  onTap: (){},)
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                ),
+                onTap: () {
+                  Get.to(EstimateDetails(title: 'Invoice',modelEstimate: arrModelEstimate[index]))!
+                      .then((value) {
+                    controllerInvoices.readInvoice();
+                  });
+                },
+              );
 
-                            ],
-                          );
-
-                        }),
-                  ),
-                  // SizedBox(
-                  //   height: 15,),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Text(
-                  //         'June 2022',
-                  //         style:  TextStylesProductSans.textStyles_16
-                  //             .apply(color: ColorStyle.black, fontWeightDelta: 4)),
-                  //     Text(
-                  //         '\$456.00',
-                  //         style:  TextStylesProductSans.textStyles_16
-                  //             .apply(color: ColorStyle.black, fontWeightDelta: 4)),
-                  //   ],),
-                  // SizedBox(
-                  //   height: 10,),
-                  // Container(
-                  //     height: 1,
-                  //     color: ColorStyle.grey
-                  // ),
-                  // SizedBox(
-                  //   height: 15,),
-                  // InvoicesActiveCustom(),
-                  // Container(
-                  //   alignment: Alignment.bottomRight,
-                  //   child: ElevatedButtonCustom(
-                  //     text: "+  Create",
-                  //     colorBG:ColorStyle.secondryColor,
-                  //     colorText: ColorStyle.primaryColor,
-                  //     width: 116,
-                  //     onTap: () {
-                  //       // Get.to(.NewEstimate());
-                  //     },
-                  //   ),
-                  // ),
-                  if (controller.intAppBar.value == 0)
-                    Expanded(child: InvoicesActived())
-                  else if (controller.intAppBar.value == 1)
-                    Expanded(child: InvoicesPaid())
-                ],
-              ),
-            ),);
-          },
-        )
-
-
+            }))
     );
   }
 }
